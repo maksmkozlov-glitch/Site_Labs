@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Программы — Iron Fit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-zinc-100 dark:bg-zinc-950 text-zinc-900 dark:text-white">
+
+    <!-- Шапка -->
+    <header class="bg-white dark:bg-zinc-900 py-5 border-b border-zinc-200 dark:border-zinc-700 sticky top-0">
+        <div class="max-w-5xl mx-auto px-6 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 text-2xl font-bold">
+                <i class="fa-solid fa-dumbbell text-orange-500"></i>
+                Iron Fit
+            </a>
+
+            <nav class="hidden md:flex gap-8 text-lg">
+                <a href="index.html" class="hover:text-orange-500">Главная</a>
+                <a href="programs.html" class="hover:text-orange-500">Программы</a>
+                <a href="about.html" class="hover:text-orange-500">О нас</a>
+                <a href="contact.html" class="hover:text-orange-500">Контакты</a>
+            </nav>
+
+            <button id="theme-btn" class="w-10 h-10 flex items-center justify-center text-xl hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-lg">
+                <i id="theme-icon" class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="max-w-5xl mx-auto px-6 py-12">
+        <h1 class="text-4xl font-bold text-center mb-6">Программы тренировок</h1>
+        <p class="text-center text-zinc-500 dark:text-zinc-400 mb-10">Выбери программу под свой уровень</p>
+
+        <div class="flex flex-col md:flex-row gap-4 mb-10">
+            <input 
+                type="text" 
+                id="searchInput"
+                placeholder="Поиск программы..." 
+                class="flex-1 px-6 py-4 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-2xl focus:outline-none">
+            
+            <select id="levelFilter" class="px-6 py-4 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-2xl">
+                <option value="">Все уровни</option>
+                <option value="beginner">Для новичков</option>
+                <option value="intermediate">Средний</option>
+                <option value="advanced">Продвинутый</option>
+            </select>
+        </div>
+
+        <div id="programsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Карточки добавляются через JS -->
+        </div>
+    </div>
+
+    <footer class="bg-white dark:bg-zinc-900 py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+        © 2026 Iron Fit • Москва
+    </footer>
+
+    <script src="js/script.js"></script>
+
+    <script>
+        const programs = [
+            { title: "Сила для новичков", level: "beginner", duration: "8 недель", price: "4500 ₽" },
+            { title: "Кроссфит Начальный", level: "beginner", duration: "10 недель", price: "5500 ₽" },
+            { title: "Набор массы", level: "intermediate", duration: "12 недель", price: "6500 ₽" },
+            { title: "Функциональная сила", level: "intermediate", duration: "10 недель", price: "7000 ₽" },
+            { title: "Продвинутый Power", level: "advanced", duration: "16 недель", price: "8500 ₽" }
+        ];
+
+        function showPrograms(filtered) {
+            const container = document.getElementById('programsContainer');
+            container.innerHTML = '';
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-700";
+                card.innerHTML = `
+                    <h3 class="font-bold text-xl mb-2">${p.title}</h3>
+                    <p class="text-orange-600 font-medium mb-3">${p.price}</p>
+                    <p class="text-sm text-zinc-500 dark:text-zinc-400">Длительность: ${p.duration}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterPrograms() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const level = document.getElementById('levelFilter').value;
+
+            const filtered = programs.filter(p => {
+                const matchSearch = p.title.toLowerCase().includes(search);
+                const matchLevel = !level || p.level === level;
+                return matchSearch && matchLevel;
+            });
+
+            showPrograms(filtered);
+        }
+
+        window.onload = () => {
+            showPrograms(programs);
+            document.getElementById('searchInput').addEventListener('input', filterPrograms);
+            document.getElementById('levelFilter').addEventListener('change', filterPrograms);
+        };
+    </script>
+</body>
+</html>
