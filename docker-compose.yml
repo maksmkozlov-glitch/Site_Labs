@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # БД
+  postgres:
+    image: postgres:15
+    container_name: ironfit_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ironfit_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
+    networks:
+      - ironfit_network
+
+  # Node.js
+  app:
+    build: .
+    container_name: ironfit_app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - ironfit_network
+
+volumes:
+  postgres_data:
+
+networks:
+  ironfit_network:
+    driver: bridge
